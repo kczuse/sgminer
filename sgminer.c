@@ -513,10 +513,11 @@ struct pool *add_pool(void)
 
 	/* Default pool name */
 	char buf[32];
-	sprintf(buf, "%s%s%s",
-		pool->sockaddr_url,
-		pool->has_stratum ? ":" : "",
-		pool->has_stratum ? pool->stratum_port : "");
+	//sprintf(buf, "%s%s%s",
+	//	pool->sockaddr_url,
+	//	pool->has_stratum ? ":" : "",
+	//	pool->has_stratum ? pool->stratum_port : "");
+	sprintf(buf, "Pool %d", pool->pool_no);
 	pool->poolname = strdup(buf);
 
 	pools = realloc(pools, sizeof(struct pool *) * (total_pools + 2));
@@ -2142,7 +2143,7 @@ static void curses_print_status(void)
 			have_longpoll ? "with": "without");
 	} else {
 		cg_mvwprintw(statuswin, 4, 0, "Connected to %s (%s) diff %s as user %s",
-			     pool->poolname,
+			     pool->sockaddr_url,
 			     pool->has_stratum ? "stratum" : (pool->has_gbt ? "GBT" : "longpoll"),
 			     pool->diff, pool->rpc_user);
 	}
@@ -4489,7 +4490,7 @@ updated:
 			pool->idle? "Dead" : "Alive",
 			pool->quota,
 			pool->prio,
-			disp_name, pool->rpc_user);
+			pool->rpc_url, pool->rpc_user);
 		wattroff(logwin, A_BOLD | A_DIM);
 	}
 retry:
